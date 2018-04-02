@@ -8,7 +8,9 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.FixedLengthFrameDecoder;
 import io.netty.handler.timeout.ReadTimeoutHandler;
+import org.hhs.remoting.netty.handler.HeartBeatReqHandler;
 import org.hhs.remoting.netty.handler.HeartBeatRespHandler;
 import org.hhs.remoting.netty.handler.codehandler.NettyMessageDecoder;
 import org.hhs.remoting.netty.handler.codehandler.NettyMessageEncoder;
@@ -30,10 +32,10 @@ public class NettyClient {
                     .option(ChannelOption.TCP_NODELAY, true)
                     .handler(new ChannelInitializer<SocketChannel>() {
                         protected void initChannel(SocketChannel ch) throws Exception {
-                            ch.pipeline().addLast(new NettyMessageDecoder(1024*1024,4,4));
+//                            ch.pipeline().addLast(new NettyMessageDecoder(1024*1024,4,4));
                             ch.pipeline().addLast(new NettyMessageEncoder());
-                            ch.pipeline().addLast("ReadTimeoutHandler", new ReadTimeoutHandler(5));
-                            ch.pipeline().addLast("HeartBeathandler", new HeartBeatRespHandler());
+                            ch.pipeline().addLast("ReadTimeoutHandler", new ReadTimeoutHandler(50));
+                            ch.pipeline().addLast("HeartBeathandlerReq", new HeartBeatReqHandler());
                         }
                     });
             ChannelFuture future = bootstrap.connect(new InetSocketAddress(host, port),new InetSocketAddress("127.0.0.1", 8081)).sync();

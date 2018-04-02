@@ -1,6 +1,7 @@
 package org.hhs.remoting.netty;
 
 import io.netty.handler.codec.marshalling.*;
+import org.hhs.remoting.netty.handler.codehandler.NettyMarshallingEncoder;
 import org.jboss.marshalling.*;
 
 import java.io.IOException;
@@ -27,12 +28,12 @@ public class MarshallingCodeCFactory {
         return decoder;
     }
 
-    public static MarshallingEncoder buildMarshallingEncoder(){
-        final MarshallerFactory marshallerFactory = Marshalling.getMarshallerFactory("serial");
-        final MarshallingConfiguration configuration = new MarshallingConfiguration();
+    public static NettyMarshallingEncoder buildMarshallingEncoder(){
+        MarshallerFactory marshallerFactory = Marshalling.getProvidedMarshallerFactory("serial");
+        MarshallingConfiguration configuration = new MarshallingConfiguration();
         configuration.setVersion(5);
         MarshallerProvider provider = new DefaultMarshallerProvider(marshallerFactory, configuration);
-        MarshallingEncoder encoder = new MarshallingEncoder(provider);
+        NettyMarshallingEncoder encoder = new NettyMarshallingEncoder(provider);
         return encoder;
     }
 

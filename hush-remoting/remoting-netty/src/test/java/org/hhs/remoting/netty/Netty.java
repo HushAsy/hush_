@@ -14,6 +14,7 @@ public class Netty {
     @Test
     public void testHeartBeart() throws InterruptedException, IOException {
         new NettyServer().bind();
+        Thread.sleep(5000);
         new NettyClient().connect("127.0.0.1", 8080);
         System.in.read();
     }
