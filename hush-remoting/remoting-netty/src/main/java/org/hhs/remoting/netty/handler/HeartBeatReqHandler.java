@@ -3,8 +3,9 @@ package org.hhs.remoting.netty.handler;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.util.concurrent.ScheduledFuture;
-import org.hhs.remoting.netty.handler.codehandler.MessageType;
-import org.hhs.remoting.netty.handler.codehandler.NettyMessage;
+import org.hhs.remoting.netty.model.Header;
+import org.hhs.remoting.netty.model.MessageType;
+import org.hhs.remoting.netty.model.NettyMessage;
 
 import java.util.concurrent.TimeUnit;
 
@@ -24,6 +25,12 @@ public class HeartBeatReqHandler extends ChannelHandlerAdapter {
     }
 
     @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        super.channelActive(ctx);
+        heartBeat = ctx.executor().scheduleAtFixedRate(new HeartBeatReqHandler.HeartBeatTask(ctx), 1, 5, TimeUnit.SECONDS);
+    }
+
+    @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         if (heartBeat != null){
             heartBeat.cancel(true);
@@ -34,7 +41,7 @@ public class HeartBeatReqHandler extends ChannelHandlerAdapter {
 
     private NettyMessage buildHeatBeat(){
         NettyMessage message = new NettyMessage();
-        NettyMessage.Header header = new NettyMessage().new Header();
+        Header header = new Header();
         header.setType(MessageType.HEARTBEAT_REQ.getaByte());
         message.setHeader(header);
         return message;

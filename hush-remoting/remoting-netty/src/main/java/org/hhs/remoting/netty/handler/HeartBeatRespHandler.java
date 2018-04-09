@@ -2,8 +2,9 @@ package org.hhs.remoting.netty.handler;
 
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
-import org.hhs.remoting.netty.handler.codehandler.MessageType;
-import org.hhs.remoting.netty.handler.codehandler.NettyMessage;
+import org.hhs.remoting.netty.model.Header;
+import org.hhs.remoting.netty.model.MessageType;
+import org.hhs.remoting.netty.model.NettyMessage;
 
 /**
  * @description:
@@ -25,9 +26,14 @@ public class HeartBeatRespHandler extends ChannelHandlerAdapter {
         }
     }
 
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        super.channelActive(ctx);
+    }
+
     private NettyMessage buildHearBeat(){
         NettyMessage message = new NettyMessage();
-        NettyMessage.Header header = new NettyMessage().new Header();
+        Header header = new Header();
         header.setType(MessageType.HEARTBEAT_RESP.getaByte());
         message.setHeader(header);
         return message;
