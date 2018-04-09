@@ -23,20 +23,18 @@ public class NettyServer {
         ServerBootstrap bootstrap = new ServerBootstrap();
         bootstrap.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
+//                .handler(new LoggingHandler(LogLevel.INFO))
                 .childHandler(new ChannelInitializer<SocketChannel>() {
                     protected void initChannel(SocketChannel ch) throws Exception {
-                        ch.pipeline().addLast(new LoggingHandler(LogLevel.INFO));
+                        ch.pipeline().addLast(new ObjectDecoder(ClassResolvers.cacheDisabled(Thread.currentThread().getContextClassLoader())));
                         ch.pipeline().addLast(new ObjectEncoder());
-                        ch.pipeline().addLast(new ObjectDecoder(ClassResolvers.cacheDisabled(null)));
                         ch.pipeline().addLast(new LoginAuthRespHandler());
                         ch.pipeline().addLast(new HeartBeatRespHandler());
                     }
                 });
-        ChannelFuture channelFuture = bootstrap.bind("127.0.0.1", 8080).sync();
-        ChannelFuture future = channelFuture.channel().closeFuture().sync();
-        if (future.isCancelled()){
-            System.out.println("closed");
-        }
+        ChannelFuture future = bootstrap.bind("127.0.0.1", 8080).sync();
+        future.channel().closeFuture().sync();
+        System.out.println("Netty server start ok");
     }
 
     public static void main(String...args) throws InterruptedException {

@@ -33,9 +33,9 @@ public class NettyClient {
                     .option(ChannelOption.TCP_NODELAY, true)
                     .handler(new ChannelInitializer<SocketChannel>() {
                         protected void initChannel(SocketChannel ch) throws Exception {
-                            ch.pipeline().addLast(new LoggingHandler(LogLevel.INFO));
+//                            ch.pipeline().addLast(new LoggingHandler(LogLevel.INFO));
+                            ch.pipeline().addLast(new ObjectDecoder(ClassResolvers.cacheDisabled(Thread.currentThread().getContextClassLoader())));
                             ch.pipeline().addLast(new ObjectEncoder());
-                            ch.pipeline().addLast(new ObjectDecoder(ClassResolvers.cacheDisabled(null)));
                             ch.pipeline().addLast(new LoginAuthReqHandler());
                             ch.pipeline().addLast(new HeartBeatReqHandler());
                         }

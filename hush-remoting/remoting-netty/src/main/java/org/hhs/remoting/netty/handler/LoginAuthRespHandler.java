@@ -2,8 +2,9 @@ package org.hhs.remoting.netty.handler;
 
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
-import org.hhs.remoting.netty.handler.model.MessageType;
-import org.hhs.remoting.netty.handler.model.NettyMessage;
+import org.hhs.remoting.netty.model.Header;
+import org.hhs.remoting.netty.model.MessageType;
+import org.hhs.remoting.netty.model.NettyMessage;
 
 import java.net.InetSocketAddress;
 import java.util.Map;
@@ -53,7 +54,7 @@ public class LoginAuthRespHandler extends ChannelHandlerAdapter {
 
     private NettyMessage buildResponse(byte result){
         NettyMessage message = new NettyMessage();
-        NettyMessage.Header header = new NettyMessage().new Header();
+        Header header = new Header();
         header.setType(MessageType.LOGIN_RESP.getaByte());
         message.setHeader(header);
         message.setBody(result);
