@@ -2,8 +2,8 @@ package org.hhs.remoting.netty.handler;
 
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
-import org.hhs.remoting.netty.handler.codehandler.MessageType;
-import org.hhs.remoting.netty.handler.codehandler.NettyMessage;
+import org.hhs.remoting.netty.handler.model.MessageType;
+import org.hhs.remoting.netty.handler.model.NettyMessage;
 
 /**
  * @description:

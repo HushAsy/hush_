@@ -1,4 +1,4 @@
-package org.hhs.remoting.netty.handler.codehandler;
+package org.hhs.remoting.netty.handler.model;
 
 import java.util.HashMap;
 import java.util.Map;

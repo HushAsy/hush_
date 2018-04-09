@@ -1,4 +1,4 @@
-package org.hhs.remoting.netty.handler.codehandler;
+package org.hhs.remoting.netty.handler.model;
 
 public enum MessageType {
     LOGIN_REQ((byte) 1), LOGIN_RESP((byte) 2), HEARTBEAT_REQ((byte) 3), HEARTBEAT_RESP((byte) 4);
