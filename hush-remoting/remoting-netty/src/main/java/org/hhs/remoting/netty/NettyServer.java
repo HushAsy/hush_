@@ -1,6 +1,7 @@
 package org.hhs.remoting.netty;
 
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
@@ -12,10 +13,14 @@ import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import org.hhs.remoting.api.Server;
 import org.hhs.remoting.netty.handler.HeartBeatRespHandler;
 import org.hhs.remoting.netty.handler.LoginAuthRespHandler;
 
-public class NettyServer {
+import java.net.InetSocketAddress;
+import java.util.Collection;
+
+public class NettyServer implements Server{
 
     public void bind() throws InterruptedException {
         EventLoopGroup bossGroup = new NioEventLoopGroup();
@@ -34,11 +39,16 @@ public class NettyServer {
                 });
         ChannelFuture future = bootstrap.bind("127.0.0.1", 8080).sync();
         future.channel().closeFuture().sync();
-        System.out.println("Netty server start ok");
     }
 
-    public static void main(String...args) throws InterruptedException {
-        NettyServer nettyServer = new NettyServer();
-        nettyServer.bind();
+
+    @Override
+    public Collection<Channel> getChannels() {
+        return null;
+    }
+
+    @Override
+    public Channel getChannl(InetSocketAddress remoteAddress) {
+        return null;
     }
 }

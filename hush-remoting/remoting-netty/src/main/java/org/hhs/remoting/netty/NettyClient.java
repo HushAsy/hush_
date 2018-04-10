@@ -13,6 +13,7 @@ import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import org.hhs.remoting.api.Client;
 import org.hhs.remoting.netty.handler.HeartBeatReqHandler;
 import org.hhs.remoting.netty.handler.LoginAuthReqHandler;
 
@@ -21,7 +22,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class NettyClient {
+public class NettyClient implements Client {
     private ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
     EventLoopGroup group = new NioEventLoopGroup();
 
@@ -55,5 +56,10 @@ public class NettyClient {
                 }
             });
         }
+    }
+
+    @Override
+    public void reconnect() {
+
     }
 }
