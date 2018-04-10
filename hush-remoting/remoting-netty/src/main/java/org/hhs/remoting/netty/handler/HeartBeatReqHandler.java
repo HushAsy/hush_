@@ -7,6 +7,8 @@ import org.hhs.remoting.netty.model.Header;
 import org.hhs.remoting.netty.model.MessageType;
 import org.hhs.remoting.netty.model.NettyMessage;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class HeartBeatReqHandler extends ChannelHandlerAdapter {
@@ -27,7 +29,6 @@ public class HeartBeatReqHandler extends ChannelHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
-//        heartBeat = ctx.executor().scheduleAtFixedRate(new HeartBeatReqHandler.HeartBeatTask(ctx), 1, 5, TimeUnit.SECONDS);
     }
 
     @Override
@@ -43,6 +44,9 @@ public class HeartBeatReqHandler extends ChannelHandlerAdapter {
         NettyMessage message = new NettyMessage();
         Header header = new Header();
         header.setType(MessageType.HEARTBEAT_REQ.getaByte());
+        Map<String, Object> map = new HashMap();
+        map.put("hello", Thread.currentThread().getName());
+        header.setAttachment(map);
         message.setHeader(header);
         return message;
     }

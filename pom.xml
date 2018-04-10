@@ -10,6 +10,8 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>hush-remoting</module>
+        <module>hush-rpc</module>
+        <module>hushcommon</module>
     </modules>
     <properties>
         <netty-all>5.0.0.Alpha2</netty-all>

@@ -6,7 +6,7 @@ import org.hhs.remoting.netty.model.Header;
 import org.hhs.remoting.netty.model.MessageType;
 import org.hhs.remoting.netty.model.NettyMessage;
 
-/**
+/**`
  * @description:
  * @author: hewater
  * @create: 2018-04-01 15:56
@@ -21,9 +21,6 @@ public class LoginAuthReqHandler extends ChannelHandlerAdapter{
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         NettyMessage message = (NettyMessage) msg;
-        if (message.getHeader().getType() == MessageType.LOGIN_RESP.getaByte()){
-            System.out.println("hihihi");
-        }
         if (message.getHeader() != null && message.getHeader().getType() == MessageType.LOGIN_RESP.getaByte()){
             Byte logingResult = (Byte)message.getBody();
             if (logingResult != (byte)0){

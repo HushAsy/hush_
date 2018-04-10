@@ -6,6 +6,9 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="hush-rpc" />
+        <module name="hushcommon" />
+        <module name="hushrpc" />
         <module name="remoting-netty" />
         <module name="remoting-test" />
       </profile>
@@ -13,9 +16,11 @@
     <bytecodeTargetLevel target="1.8">
       <module name="hush" target="1.5" />
       <module name="hush-remoting" target="1.5" />
+      <module name="hush-rpc" target="1.5" />
+      <module name="hushcommon" target="1.5" />
+      <module name="hushrpc" target="1.5" />
       <module name="remoting-netty" target="1.8" />
       <module name="remoting-test" target="1.7" />
-      <module name="remotingnetty" target="1.5" />
     </bytecodeTargetLevel>
   </component>
 </project>
