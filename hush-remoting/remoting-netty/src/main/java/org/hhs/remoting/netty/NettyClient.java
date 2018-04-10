@@ -33,7 +33,7 @@ public class NettyClient {
                     .option(ChannelOption.TCP_NODELAY, true)
                     .handler(new ChannelInitializer<SocketChannel>() {
                         protected void initChannel(SocketChannel ch) throws Exception {
-//                            ch.pipeline().addLast(new LoggingHandler(LogLevel.INFO));
+                            ch.pipeline().addLast(new LoggingHandler(LogLevel.INFO));
                             ch.pipeline().addLast(new ObjectDecoder(ClassResolvers.cacheDisabled(Thread.currentThread().getContextClassLoader())));
                             ch.pipeline().addLast(new ObjectEncoder());
                             ch.pipeline().addLast(new LoginAuthReqHandler());
@@ -55,10 +55,5 @@ public class NettyClient {
                 }
             });
         }
-    }
-
-    public static void main(String...args) throws InterruptedException {
-        NettyClient client = new NettyClient();
-        client.connect("127.0.0.1", 8080);
     }
 }

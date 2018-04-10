@@ -21,7 +21,7 @@ public class LoginAuthReqHandler extends ChannelHandlerAdapter{
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         NettyMessage message = (NettyMessage) msg;
-        if (message.getHeader() == null && message.getHeader().getType() == MessageType.LOGIN_RESP.getaByte()){
+        if (message.getHeader() != null && message.getHeader().getType() == MessageType.LOGIN_RESP.getaByte()){
             Byte logingResult = (Byte)message.getBody();
             if (logingResult != (byte)0){
                 ctx.close();
