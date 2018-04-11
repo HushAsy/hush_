@@ -1,10 +1,7 @@
 package org.hhs.remoting.netty;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -13,6 +10,8 @@ import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import org.hhs.common.rpc.NetUtils;
+import org.hhs.common.rpc.URL;
 import org.hhs.remoting.api.Client;
 import org.hhs.remoting.netty.handler.HeartBeatReqHandler;
 import org.hhs.remoting.netty.handler.LoginAuthReqHandler;
@@ -26,7 +25,7 @@ public class NettyClient implements Client {
     private ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
     EventLoopGroup group = new NioEventLoopGroup();
 
-    public void connect(String host, int port) throws InterruptedException {
+    public void connect(URL url, ChannelHandler channelHandler) throws InterruptedException {
         try {
             Bootstrap bootstrap = new Bootstrap();
             bootstrap.group(group)
@@ -39,17 +38,17 @@ public class NettyClient implements Client {
                             ch.pipeline().addLast(new ObjectEncoder());
                             ch.pipeline().addLast(new LoginAuthReqHandler());
                             ch.pipeline().addLast(new HeartBeatReqHandler());
+
                         }
                     });
-            ChannelFuture future = bootstrap.connect(new InetSocketAddress(host, port),new InetSocketAddress("127.0.0.1", 8081)).sync();
-            System.out.println("connect success!");
+            ChannelFuture future = bootstrap.connect(new InetSocketAddress(url.getHost(), url.getPort()),new InetSocketAddress(NetUtils.getLocalAddress(), 8081)).sync();
             future.channel().closeFuture().sync();
         }finally {
             executorService.execute(new Runnable() {
                 public void run() {
                     try {
                         TimeUnit.SECONDS.sleep(5);
-                        connect("127.0.0.1", 8080);
+                        connect(url, channelHandler);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

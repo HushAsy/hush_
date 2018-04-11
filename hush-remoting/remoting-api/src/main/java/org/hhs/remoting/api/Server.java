@@ -4,10 +4,11 @@ import io.netty.channel.Channel;
 
 import java.net.InetSocketAddress;
 import java.util.Collection;
+import java.util.Map;
 
 public interface Server {
 
-    Collection<Channel> getChannels();
+    Map<String, Channel> getChannels();
 
     Channel getChannl(InetSocketAddress remoteAddress);
 }
