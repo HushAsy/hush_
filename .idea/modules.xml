@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/hush-common/hush-common.iml" filepath="$PROJECT_DIR$/hush-common/hush-common.iml" />
       <module fileurl="file://$PROJECT_DIR$/hush-remoting/hush-remoting.iml" filepath="$PROJECT_DIR$/hush-remoting/hush-remoting.iml" />
       <module fileurl="file://$PROJECT_DIR$/hush-rpc/hush-rpc.iml" filepath="$PROJECT_DIR$/hush-rpc/hush-rpc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hush-remoting/remoting-api/remoting-api.iml" filepath="$PROJECT_DIR$/hush-remoting/remoting-api/remoting-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/hush-remoting/remoting-netty/remoting-netty.iml" filepath="$PROJECT_DIR$/hush-remoting/remoting-netty/remoting-netty.iml" />
       <module fileurl="file://$PROJECT_DIR$/hush-remoting/remoting-test/remoting-test.iml" filepath="$PROJECT_DIR$/hush-remoting/remoting-test/remoting-test.iml" />
     </modules>

@@ -6,15 +6,13 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoop;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import protocol.coder.NettyMessageDecoder;
-import protocol.coder.NettyMessageEncoder;
 import protocol.handler.HeartBeatRespHandler;
-import protocol.handler.LoginAuthRespHandler;
 
 /**
  * Created by 3307 on 2016/3/5.
@@ -34,15 +32,17 @@ public class ProtocolServer {
                         protected void initChannel(SocketChannel ch) throws Exception {
                             // 第四个参数是调整因为前2个有关长度的值导致（LengthFieldBasedFrameDecoder里面会把
                             // frameLength与（message的长度加上length有关的偏移量）进行比较，如果不修整会出错
-                            ch.pipeline().addLast(new NettyMessageDecoder(1024 * 1024, 4, 4, -8, 0));
-                            ch.pipeline().addLast(new NettyMessageEncoder());
-                            ch.pipeline().addLast(new LoginAuthRespHandler());
+//                            ch.pipeline().addLast(new NettyMessageDecoder(1024 * 1024, 4, 4, -8, 0));
+//                            ch.pipeline().addLast(new NettyMessageEncoder());
+//                            ch.pipeline().addLast(new LoginAuthRespHandler());
                             ch.pipeline().addLast(new HeartBeatRespHandler());
                         }
                     });
             ChannelFuture f = b.bind(ProtocalConstant.REMOTEIP, ProtocalConstant.PORT).sync();
-            System.out.println("Netty server start ok : " + (ProtocalConstant.REMOTEIP + " : " + ProtocalConstant.PORT));
-            f.channel().closeFuture().sync();
+            ChannelFuture future = f.channel().closeFuture().sync();
+            if (future.isCancelled()){
+                System.out.println("closed");
+            }
         } finally {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
@@ -55,5 +55,7 @@ public class ProtocolServer {
         } catch (Exception e) {
             e.printStackTrace();
         }
+//        NioEventLoop nioEventLoop = new NioEventLoop(null, null, null);
+//        nioEventLoop.execute(null);
     }
 }
