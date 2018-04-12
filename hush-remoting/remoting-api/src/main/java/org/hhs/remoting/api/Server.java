@@ -10,5 +10,5 @@ public interface Server {
 
     Map<String, Channel> getChannels();
 
-    Channel getChannl(InetSocketAddress remoteAddress);
+    Channel getChannl(String remoteAddress);
 }

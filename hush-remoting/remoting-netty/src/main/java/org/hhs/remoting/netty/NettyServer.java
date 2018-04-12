@@ -18,11 +18,14 @@ import org.hhs.remoting.netty.handler.LoginAuthRespHandler;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class NettyServer extends ChannelHandlerAdapter implements Server{
     private Map<String, Channel> channels = new ConcurrentHashMap();
+
+    private ChannelFuture channelFuture;
 
     public NettyServer(URL url, ChannelHandler channelHandler){
         try {
@@ -43,18 +46,21 @@ public class NettyServer extends ChannelHandlerAdapter implements Server{
                     protected void initChannel(SocketChannel ch) throws Exception {
                         ch.pipeline().addLast(new ObjectDecoder(ClassResolvers.cacheDisabled(Thread.currentThread().getContextClassLoader())));
                         ch.pipeline().addLast(new ObjectEncoder());
-                        ch.pipeline().addLast(new LoginAuthRespHandler());
-                        ch.pipeline().addLast(new HeartBeatRespHandler());
-                        ch.pipeline().addLast(channelHandler);
+//                        ch.pipeline().addLast(new LoginAuthRespHandler());
+//                        ch.pipeline().addLast(new HeartBeatRespHandler());
+                        if (channelHandler != null){
+                            ch.pipeline().addLast(channelHandler);
+                        }
+                        ch.pipeline().addLast(this);
                     }
                 });
-        ChannelFuture future = bootstrap.bind(url.getHost(), url.getPort()).sync();
-        future.channel().closeFuture().sync();
+        channelFuture = bootstrap.bind(url.getHost(), url.getPort()).sync();
     }
 
     @Override
     public void connect(ChannelHandlerContext ctx, SocketAddress remoteAddress, SocketAddress localAddress, ChannelPromise promise) throws Exception {
         super.connect(ctx, remoteAddress, localAddress, promise);
+        System.out.println("connect");
         if (ctx.channel() != null){
             channels.put(NetUtils.getAddressStr((InetSocketAddress)ctx.channel().remoteAddress()), ctx.channel());
         }
@@ -67,12 +73,20 @@ public class NettyServer extends ChannelHandlerAdapter implements Server{
     }
 
     @Override
+    public void close(ChannelHandlerContext ctx, ChannelPromise promise) throws Exception {
+        super.close(ctx, promise);
+        channels.forEach((k, channel)->{
+            channel.close();
+        });
+    }
+
+    @Override
     public Map<String, Channel> getChannels() {
         return channels;
     }
 
     @Override
-    public Channel getChannl(InetSocketAddress remoteAddress) {
-        return channels.get(remoteAddress);
+    public Channel getChannl(String url) {
+        return channels.get(url);
     }
 }

@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 public class NettyClient extends ChannelHandlerAdapter implements Client {
     private ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
     EventLoopGroup group = new NioEventLoopGroup();
-
+    private ChannelFuture channelFuture;
     public NettyClient(URL url, ChannelHandler channelHandler){
         try {
             connect(url, channelHandler);
@@ -44,30 +44,35 @@ public class NettyClient extends ChannelHandlerAdapter implements Client {
                             ch.pipeline().addLast(new LoggingHandler(LogLevel.INFO));
                             ch.pipeline().addLast(new ObjectDecoder(ClassResolvers.cacheDisabled(Thread.currentThread().getContextClassLoader())));
                             ch.pipeline().addLast(new ObjectEncoder());
-                            ch.pipeline().addLast(new LoginAuthReqHandler());
-                            ch.pipeline().addLast(new HeartBeatReqHandler());
-                            ch.pipeline().addLast(this);
+//                            ch.pipeline().addLast(new LoginAuthReqHandler());
+//                            ch.pipeline().addLast(new HeartBeatReqHandler());
+//                            ch.pipeline().addLast(this);
 
                         }
                     });
-            ChannelFuture future = bootstrap.connect(new InetSocketAddress(url.getHost(), url.getPort()),new InetSocketAddress(NetUtils.getLocalAddress(), 8081)).sync();
-            future.channel().closeFuture().sync();
+            channelFuture = bootstrap.connect(new InetSocketAddress(url.getHost(), url.getPort()),new InetSocketAddress(NetUtils.getLocalAddress(), 8081)).sync();
         }finally {
-            executorService.execute(new Runnable() {
-                public void run() {
-                    try {
-                        TimeUnit.SECONDS.sleep(5);
-                        connect(url, channelHandler);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+
         }
     }
 
     @Override
     public void reconnect() {
 
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        super.channelInactive(ctx);
+    }
+
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        super.channelActive(ctx);
+    }
+
+    @Override
+    public ChannelFuture getChannelFuture() {
+        return channelFuture;
     }
 }

@@ -8,6 +8,8 @@ import java.util.regex.Pattern;
 
 public class URL implements Serializable{
 
+    private transient static String url;
+
     private static final long serialVersionUID = -1985165475234910535L;
 
     private final String protocol;
@@ -44,40 +46,12 @@ public class URL implements Serializable{
         this.parameters = parameters;
     }
 
-    //dubbo://admin:hello1234@10.20.130.230:20880/context/path?application=morgan&k1=v1&k2=v2
-    public static URL valueOf1(String url){
-        String protocol = null;
-        String username = null;
-        String password = null;
-        String host = null;
-        int port = 0;
-        String path = null;
-        Map<String, String> parameters = null;
-
-        URL _url = new URL();
-//        String urlTest = "dubbo://admin:hello1234@10.20.130.230:20880/context/path?application=morgan&k1=v1&k2=v2";
-        if (url == null || url.trim().length() == 0){
-            throw new IllegalArgumentException("url == null");
-        }
-        String[] strings = url.split("\\?");
-        if (strings.length > 1){
-            parameters = strParse(strings[1]);
-        }
-        url = strings[0];
-        String[] proto = url.split("://");
-        protocol = proto[0];
-        String[] userArrs = proto[1].split("@");
-        username = userArrs[0].split(":")[0];
-        password = userArrs[0].split(":")[1];
-        String pa = userArrs[1].substring(userArrs[1].indexOf("/"),userArrs[1].length());
-        path = pa;
-        String hostP = userArrs[1].substring(0, userArrs[1].indexOf("/"));
-        host = hostP.split(":")[0];
-        port = Integer.parseInt(hostP.split(":")[1]);
-        return new URL(protocol, username, password, host, port, path, parameters);
+    public String getStr(){
+        return url;
     }
 
     public static URL valueOf(String url) {
+        URL.url = url;
         if (url == null || (url = url.trim()).length() == 0){
             throw new IllegalArgumentException("url = null");
         }
@@ -157,10 +131,6 @@ public class URL implements Serializable{
             }
         }
         return paramsMap;
-    }
-
-    public static void main(String...args){
-        String urlTest = "dubbo://admin:hello1234@10.20.130.230:20880/context/path";
     }
 
     public static long getSerialVersionUID() {

@@ -29,32 +29,36 @@ public final class Header implements Serializable{
         return crcCode;
     }
 
-    public final void setCrcCode(int crcCode) {
+    public final Header setCrcCode(int crcCode) {
         this.crcCode = crcCode;
+        return this;
     }
 
     public final int getLength() {
         return length;
     }
 
-    public final void setLength(int length) {
+    public final Header setLength(int length) {
         this.length = length;
+        return this;
     }
 
     public final long getSessionID() {
         return sessionID;
     }
 
-    public final void setSessionID(long sessionID) {
+    public final Header setSessionID(long sessionID) {
         this.sessionID = sessionID;
+        return this;
     }
 
     public final byte getType() {
         return type;
     }
 
-    public final void setType(byte type) {
+    public final Header setType(byte type) {
         this.type = type;
+        return this;
     }
 
     public final byte getPriority() {

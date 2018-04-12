@@ -1,8 +1,6 @@
 package org.hhs.remoting.netty;
 
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandler;
-import io.netty.channel.DefaultChannelPromise;
+import io.netty.channel.*;
 import org.hhs.common.rpc.URL;
 import org.hhs.remoting.api.Client;
 import org.hhs.remoting.api.Server;
@@ -20,19 +18,6 @@ public class NettyTransporter implements Transporter{
 
     @Override
     public Server bind(URL url, ChannelHandler handler) {
-        Server server = new Server() {
-            @Override
-            public Map<String, Channel> getChannels() {
-                return null;
-            }
-
-            @Override
-            public Channel getChannl(InetSocketAddress remoteAddress) {
-                return null;
-            }
-        };
-//        server.getChannl().
-        DefaultChannelPromise defaultChannelPromise;
         return new NettyServer(url, handler);
     }
 

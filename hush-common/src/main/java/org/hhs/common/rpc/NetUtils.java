@@ -10,6 +10,10 @@ public class NetUtils {
         return socketAddress.getAddress() +":"+ socketAddress.getPort();
     }
 
+    public static String getAddressStr(String host, String port){
+        return host + ":" + port;
+    }
+
     public static String getLocalAddress() {
         try {
             InetAddress inetAddress = InetAddress.getLocalHost();
