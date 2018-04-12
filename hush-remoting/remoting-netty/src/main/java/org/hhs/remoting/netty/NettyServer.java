@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class NettyServer extends ChannelHandlerAdapter implements Server{
-    Map<String, Channel> channels = new ConcurrentHashMap();
+    private Map<String, Channel> channels = new ConcurrentHashMap();
 
     public NettyServer(URL url, ChannelHandler channelHandler){
         try {

@@ -21,9 +21,17 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class NettyClient implements Client {
+public class NettyClient extends ChannelHandlerAdapter implements Client {
     private ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
     EventLoopGroup group = new NioEventLoopGroup();
+
+    public NettyClient(URL url, ChannelHandler channelHandler){
+        try {
+            connect(url, channelHandler);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void connect(URL url, ChannelHandler channelHandler) throws InterruptedException {
         try {
@@ -38,6 +46,7 @@ public class NettyClient implements Client {
                             ch.pipeline().addLast(new ObjectEncoder());
                             ch.pipeline().addLast(new LoginAuthReqHandler());
                             ch.pipeline().addLast(new HeartBeatReqHandler());
+                            ch.pipeline().addLast(this);
 
                         }
                     });
