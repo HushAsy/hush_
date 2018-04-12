@@ -19,4 +19,8 @@ public class NetUtils {
         }
         return null;
     }
+
+    public static int defaultPort(){
+        return 10000;
+    }
 }

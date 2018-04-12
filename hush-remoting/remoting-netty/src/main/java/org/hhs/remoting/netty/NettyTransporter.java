@@ -20,6 +20,6 @@ public class NettyTransporter implements Transporter{
 
     @Override
     public Client connect(URL url, ChannelHandler handler) {
-        return null;
+        return new NettyClient();
     }
 }
