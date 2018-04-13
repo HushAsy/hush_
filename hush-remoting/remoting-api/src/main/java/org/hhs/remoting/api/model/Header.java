@@ -1,4 +1,4 @@
-package org.hhs.remoting.netty.model;
+package org.hhs.remoting.api.model;
 
 import java.io.Serializable;
 import java.util.HashMap;

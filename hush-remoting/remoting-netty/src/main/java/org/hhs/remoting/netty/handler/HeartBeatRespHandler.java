@@ -2,9 +2,10 @@ package org.hhs.remoting.netty.handler;
 
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
-import org.hhs.remoting.netty.model.Header;
-import org.hhs.remoting.netty.model.MessageType;
-import org.hhs.remoting.netty.model.NettyMessage;
+import org.hhs.remoting.api.model.Header;
+import org.hhs.remoting.api.model.MessageType;
+import org.hhs.remoting.api.model.NettyMessage;
+
 
 /**
  * @description:

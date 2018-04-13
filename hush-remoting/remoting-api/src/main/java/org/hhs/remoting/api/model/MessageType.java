@@ -1,13 +1,13 @@
-package org.hhs.remoting.netty.model;
+package org.hhs.remoting.api.model;
 
 /**
  * Created by 3307 on 2016/3/4.
  */
 public enum MessageType {
 
-    REQUEST((byte) 1),
+    RPC_REQUEST((byte) 1),
 
-    RESPONSE((byte) 2),
+    RPC_RESPONSE((byte) 2),
 
     /**
      * 握手请求消息

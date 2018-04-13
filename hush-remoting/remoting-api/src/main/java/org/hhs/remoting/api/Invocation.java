@@ -10,12 +10,10 @@ public interface Invocation {
 
     Object[] getArguments();
 
-    Map<String, String> getAttachments();
+    Map<String, Object> getAttachments();
 
-    String getAttachment(String key);
+    Object getAttachment(String key);
 
-    String getAttachment(String key, String defaultValue);
-
-
+    Object getAttachment(String key, String defaultValue);
 
 }

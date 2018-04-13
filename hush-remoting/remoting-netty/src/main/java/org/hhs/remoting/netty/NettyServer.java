@@ -10,19 +10,12 @@ import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import org.hhs.common.rpc.NetUtils;
 import org.hhs.common.rpc.URL;
 import org.hhs.remoting.api.Server;
-import org.hhs.remoting.netty.handler.HeartBeatRespHandler;
-import org.hhs.remoting.netty.handler.LoginAuthRespHandler;
 
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-public class NettyServer extends ChannelHandlerAdapter implements Server{
+public class NettyServer implements Server{
     private Map<String, Channel> channels = new ConcurrentHashMap();
 
     private ChannelFuture channelFuture;
@@ -51,41 +44,15 @@ public class NettyServer extends ChannelHandlerAdapter implements Server{
                         if (channelHandler != null){
                             ch.pipeline().addLast(channelHandler);
                         }
-                        ch.pipeline().addLast(this);
                     }
                 });
         channelFuture = bootstrap.bind(url.getHost(), url.getPort()).sync();
     }
 
-    @Override
-    public void connect(ChannelHandlerContext ctx, SocketAddress remoteAddress, SocketAddress localAddress, ChannelPromise promise) throws Exception {
-        super.connect(ctx, remoteAddress, localAddress, promise);
-        System.out.println("connect");
-        if (ctx.channel() != null){
-            channels.put(NetUtils.getAddressStr((InetSocketAddress)ctx.channel().remoteAddress()), ctx.channel());
-        }
-    }
-
-    @Override
-    public void disconnect(ChannelHandlerContext ctx, ChannelPromise promise) throws Exception {
-        super.disconnect(ctx, promise);
-        channels.remove(NetUtils.getAddressStr((InetSocketAddress)ctx.channel().remoteAddress()));
-    }
-
-    @Override
-    public void close(ChannelHandlerContext ctx, ChannelPromise promise) throws Exception {
-        super.close(ctx, promise);
-        channels.forEach((k, channel)->{
-            channel.close();
-        });
-    }
-
-    @Override
     public Map<String, Channel> getChannels() {
         return channels;
     }
 
-    @Override
     public Channel getChannl(String url) {
         return channels.get(url);
     }

@@ -8,7 +8,7 @@ import java.util.Map;
 
 public interface Server {
 
-    Map<String, Channel> getChannels();
+//    Map<String, Channel> getChannels();
 
-    Channel getChannl(String remoteAddress);
+//    Channel getChannl(String remoteAddress);
 }

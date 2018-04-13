@@ -4,6 +4,7 @@ import org.hhs.common.rpc.URL;
 
 public interface Invoker {
 
-    URL url();
+    URL getUrl();
 
+    Invocation getInvocation();
 }
