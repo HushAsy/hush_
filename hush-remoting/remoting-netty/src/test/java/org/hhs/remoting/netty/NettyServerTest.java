@@ -4,9 +4,11 @@ import io.netty.channel.Channel;
 import org.hhs.common.rpc.NetUtils;
 import org.hhs.common.rpc.URL;
 import org.hhs.remoting.api.Client;
+import org.hhs.remoting.api.Server;
 import org.hhs.remoting.api.model.Header;
 import org.hhs.remoting.api.model.NettyMessage;
 import org.hhs.remoting.netty.handler.RequestHandler;
+import org.hhs.remoting.netty.handler.RpcClientHandler;
 
 public class NettyServerTest {
 
@@ -14,9 +16,7 @@ public class NettyServerTest {
         NettyTransporter transporter = new NettyTransporter();
         String urlServerTest = "dubbo://admin:hello1234@"+ NetUtils.getLocalAddress()+":20880/context/path?ad=jj";
         URL urlServer = URL.valueOf(urlServerTest);
-        Client client = transporter.connect(urlServer, new RequestHandler());
-        Channel chanel = client.getChannelFuture().channel();
-        chanel.writeAndFlush(buildClientMessage());
+        Server server = transporter.bind(urlServer, new RequestHandler());
     }
 
     private static NettyMessage buildClientMessage(){

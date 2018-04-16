@@ -12,13 +12,31 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import org.hhs.common.rpc.URL;
 import org.hhs.remoting.api.Server;
+import org.hhs.remoting.netty.handler.RpcServerHandler;
 
 import java.util.Map;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
 public class NettyServer implements Server{
     private Map<String, Channel> channels = new ConcurrentHashMap();
 
     private ChannelFuture channelFuture;
+
+    private static ThreadPoolExecutor threadPoolExecutor;
+
+    public static void submit(Runnable task){
+        if (threadPoolExecutor == null){
+            synchronized (NettyServer.class){
+                if (threadPoolExecutor == null){
+                    threadPoolExecutor = new ThreadPoolExecutor(16,16,600L, TimeUnit.SECONDS, new ArrayBlockingQueue(65536));
+                }
+            }
+        }
+        threadPoolExecutor.submit(task);
+    }
 
     public NettyServer(URL url, ChannelHandler channelHandler){
         try {
@@ -41,12 +59,14 @@ public class NettyServer implements Server{
                         ch.pipeline().addLast(new ObjectEncoder());
 //                        ch.pipeline().addLast(new LoginAuthRespHandler());
 //                        ch.pipeline().addLast(new HeartBeatRespHandler());
-                        if (channelHandler != null){
-                            ch.pipeline().addLast(channelHandler);
-                        }
+                        ch.pipeline().addLast(new RpcServerHandler());
+//                        if (channelHandler != null){
+//                            ch.pipeline().addLast(channelHandler);
+//                        }
                     }
                 });
         channelFuture = bootstrap.bind(url.getHost(), url.getPort()).sync();
+        channelFuture.channel().closeFuture().sync();
     }
 
     public Map<String, Channel> getChannels() {

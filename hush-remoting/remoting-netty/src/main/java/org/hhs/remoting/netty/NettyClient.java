@@ -15,16 +15,20 @@ import org.hhs.common.rpc.URL;
 import org.hhs.remoting.api.Client;
 import org.hhs.remoting.netty.handler.HeartBeatReqHandler;
 import org.hhs.remoting.netty.handler.LoginAuthReqHandler;
+import org.hhs.remoting.netty.handler.RpcClientHandler;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class NettyClient extends ChannelHandlerAdapter implements Client {
+public class NettyClient implements Client {
     private ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
     EventLoopGroup group = new NioEventLoopGroup();
     private ChannelFuture channelFuture;
+
+    private volatile RpcClientHandler rpcClientHandler;
+
     public NettyClient(URL url, ChannelHandler channelHandler){
         try {
             connect(url, channelHandler);
@@ -44,6 +48,7 @@ public class NettyClient extends ChannelHandlerAdapter implements Client {
                             ch.pipeline().addLast(new LoggingHandler(LogLevel.INFO));
                             ch.pipeline().addLast(new ObjectDecoder(ClassResolvers.cacheDisabled(Thread.currentThread().getContextClassLoader())));
                             ch.pipeline().addLast(new ObjectEncoder());
+                            ch.pipeline().addLast("clientHandler",new RpcClientHandler());
 //                            ch.pipeline().addLast(new LoginAuthReqHandler());
 //                            ch.pipeline().addLast(new HeartBeatReqHandler());
 //                            ch.pipeline().addLast(this);
@@ -51,24 +56,22 @@ public class NettyClient extends ChannelHandlerAdapter implements Client {
                         }
                     });
             channelFuture = bootstrap.connect(new InetSocketAddress(url.getHost(), url.getPort()),new InetSocketAddress(NetUtils.getLocalAddress(), 8081)).sync();
+            channelFuture.addListener(new ChannelFutureListener() {
+                @Override
+                public void operationComplete(ChannelFuture future) throws Exception {
+                    if (channelFuture.isSuccess()){
+                        rpcClientHandler = (RpcClientHandler) channelFuture.channel().pipeline().get("clientHandler");
+                        System.out.println("success handler");
+                    }
+                }
+            });
         }finally {
 
         }
     }
 
-    @Override
-    public void reconnect() {
-
-    }
-
-    @Override
-    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        super.channelInactive(ctx);
-    }
-
-    @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        super.channelActive(ctx);
+    public RpcClientHandler getRpcClientHandler() {
+        return rpcClientHandler;
     }
 
     @Override

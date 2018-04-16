@@ -7,8 +7,17 @@ import java.io.Serializable;
  */
 public final class NettyMessage implements Serializable{
     private static final long serialVersionUID = 1L;
+    private String requestId;
     private Header header;
     private Object body;
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
+    }
 
     public final Header getHeader() {
         return header;
@@ -29,7 +38,8 @@ public final class NettyMessage implements Serializable{
     @Override
     public String toString() {
         return "NettyMessage{" +
-                "header=" + header +
+                "requestId='" + requestId + '\'' +
+                ", header=" + header +
                 ", body=" + body +
                 '}';
     }
